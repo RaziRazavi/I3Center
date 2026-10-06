@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    مشاهده دسته بندی مقاله ها
+{% endblock %}
+
+
+{% block Content %}
+    <div class="col-12">
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-3">
+                    <div class="card" style="">
+                        <img src="{{ category.get_image_src }}" class="card-img-top" alt="" width="100rem" height="300rem">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <p class="card-text">{{ category.description }}</p>
+                            <a href="{{ category.get_absolute_url }}" class="btn btn-outline-primary">دیدن پست ها</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

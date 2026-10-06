@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    مشاهده مقاله
+{% endblock %}
+
+
+{% block Content %}
+    {#    Filter Section #}
+    <div class="col-2">
+        <p class="text">فیلتر ها</p>
+        <form action="" method="get">
+            {{ filters.form.as_p }}
+            <input type="submit" value="اعمال فیلتر" class="btn btn-outline-primary">
+        </form>
+    </div>
+
+    <div class="col-10">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <form action="{% url 'posts:view' %}" method="get">
+                    <div class="row">
+                        <div class="col-11">
+                            {{ form }}
+                        </div>
+                        <div class="col-1">
+                            <input type="submit" value="جستجو کن" class="btn btn-outline-primary">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="col-4">
+                        <div class="card" style="">
+                            <img src="{{ post.get_image_src }}" class="card-img-top" alt="..." width="100rem"
+                                 height="300rem">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.name }}</h5>
+                                <p class="card-text">{{ post.description |truncatechars:40 }}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">اسم دسته بندی: {{ post.category.name }}</li>
+                                <li class="list-group-item">
+                                    لایک ها: {{ post.likes_count }} - بازدید ها: {{ post.views_count }} -
+                                    کامنت ها: {{ post.comments_count }}
+                                </li>
+                                <li class="list-group-item">ایجاد شده در: {{ post.created_at_jalali }}</li>
+                            </ul>
+                            <div class="card-body">
+                                <a href="{{ post.get_absolute_url }}" class="btn btn-outline-primary" role="button">
+                                    دیدن مقاله</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {#                Pagination Section#}
+                <div class="col-12 mt-2">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if posts.has_previous %}
+                                {% if posts.previous_page_number != 1 %}
+                                    <li class="page-item"><a
+                                            href="?page=1{% if query_params %}&{{ query_params }}{% endif %}"
+                                            class="page-link">اولین</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item"><a
+                                        href="?page={{ posts.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}"
+                                        class="page-link">قبلی</a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item active">
+                                <span class="page-link disabled">{{ posts.number }}</span>
+                            </li>
+                            {% if posts.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ posts.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">بعدی</a>
+                                </li>
+                                {% if posts.paginator.num_pages != posts.next_page_number %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ posts.paginator.num_pages }}{% if query_params %}&{{ query_params }}{% endif %}">آخرین</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% else %}
+                <p class="text">مقاله ای وجود ندارد !!!.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

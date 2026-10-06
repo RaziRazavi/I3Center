@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load my_custom_tags %}
+
+
+{% block title %}
+    جزییات مقاله: {{ post.name }}
+{% endblock %}
+
+
+{% block Content %}
+    <div class="col-12">
+        <h1>{{ post.name }}</h1>
+        <img src="{{ post.get_image_src }}" alt="">
+        <div>
+            پسندیدن
+            <form action="{{ post.get_love_url }}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="bi bi-suit-heart{{ post | post_love_checker:request.user.id }}"></i>
+                </button>
+            </form>
+        </div>
+        <p class="text">نویسنده: {{ post.author.get_full_name }}</p>
+        <p class="text">تاریخ ایجاد: {{ post.created_at_jalali }}</p>
+        <p class="text">تعداد بازدید: {{ post.views_count }}</p>
+        <p class="text">تعداد لایک ها: {{ post.likes_count }}</p>
+        <p class="text">تعداد کامنت ها: {{ post.comments_count }}</p>
+        <p class="text">{{ post.text | safe }}</p>
+    </div>
+
+    {#    Comment & Reply Section #}
+    <div class="row">
+        {% for comment in comments %}
+            <div class="col-4">
+                <div class="card" style="">
+                    <div class="card-header">{{ comment.created_at_jalali }}</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            لایک کامنت
+                            <form action="{{ comment.get_love_url }}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi
+                                    bi-hand-thumbs-up{{ comment | post_comment_love_checker:request.user.id }}"></i>
+                                </button>
+                            </form>
+                            تعداد لایک ها : {{ comment.total_lovers }}
+                        </li>
+                        <li class="list-group-item">
+                            هیت کامنت
+                            <form action="{{ comment.get_hate_url }}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi
+                                    bi-hand-thumbs-down{{ comment | post_comment_hate_checker:request.user.id }}"></i>
+                                </button>
+                            </form>
+                            تعداد هیت ها : {{ comment.total_haters }}
+                        </li>
+                        <li class="list-group-item">
+                            کاربر  {{ comment.author.get_full_name }} نظر داده : {{ comment.body }}
+                        </li>
+                        <li class="list-group-item">
+                            {% for reply in replies %}
+                                {% if reply.parent.id == comment.id %}
+                                    <p class="card-body">کاربر {{ reply.author.get_full_name }}
+                                        جواب داده : {{ reply.body }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        </li>
+                        <li class="list-group-item">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                <div class="mb-3">
+                                    {{ form.as_p }}
+                                </div>
+                                <button type="submit" class="btn btn-primary">ارسال جواب</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-4 mb-3">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary">ارسال نظر</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
