@@ -291,7 +291,7 @@ All routes of each app are listed below. Names are used with the app namespace, 
 ### 2. Install
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/RaziRazavi/I3Center
 cd I3Center
 python -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
