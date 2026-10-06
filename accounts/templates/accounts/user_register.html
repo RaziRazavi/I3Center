@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+	ثبت نام کاربر
+{% endblock %}
+
+
+{% block Content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="ارسال کد یکبار مصرف" class="btn btn-success">
+    </form>
+{% endblock %}
