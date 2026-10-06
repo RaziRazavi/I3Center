@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block title %}
+    مشاهده محصول
+{% endblock %}
+
+
+{% block Content %}
+{#    Filter Section  #}
+    <div class="col-2 mt-1">
+        <p class="text">فیلتر ها</p>
+        <form action="" method="get">
+            {{ filters.form.as_p }}
+            <input type="submit" value="اعمال فیلتر" class="btn btn-outline-success">
+        </form>
+    </div>
+
+    <div class="col-10  mt-1">
+        <div class="row">
+            {% if products %}
+                {% for product in products %}
+                    <div class="card col-3" style="">
+                        <img src="{{ product.get_image_src }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">اسم : {{ product.name }}</h5>
+                            <p class="card-text">توضیح: {{ product.description | safe | truncatechars_html:15 }}</p>
+                            <p class="card-text">برند: {{ product.brand }}</p>
+                            <p class="card-text">جنس: {{ product.material }}</p>
+                            <p class="card-text">قیمت پایه: {{ product.start_price | intcomma }}</p>
+                            {% if product.has_discount %}
+                                <p class="card-text">تخفیف {{ product.discount }}%</p>
+                                <p class="card-text">قیمت: {{ product.base_price | intcomma }}</p>
+                            {% endif %}
+                            <p class="card-text">تعداد بازدید: {{ product.views_count }}</p>
+                            <p class="card-text">تعداد لایک ها: {{ product.favorites_count }}</p>
+                            <p class="card-text">تعداد فروش: {{ product.sales_count }}</p>
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-primary">دیدن جزییات</a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+{#                Pagination Section #}
+                <div class="col-12 mt-2">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if products.has_previous %}
+                                {% if products.previous_page_number != 1 %}
+                                    <li class="page-item"><a
+                                     href="?page=1{% if query_params %}&{{ query_params }}{% endif %}" class="page-link">اولین</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item"><a
+                                  href="?page={{ products.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}" class="page-link">قبلی</a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item active">
+                                <span class="page-link disabled">{{ products.number }}</span>
+                            </li>
+                            {% if products.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                 href="?page={{ products.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">بعدی</a>
+                                </li>
+                                {% if products.paginator.num_pages != products.next_page_number %}
+                                    <li class="page-item"><a class="page-link"
+                                     href="?page={{ products.paginator.num_pages }}{% if query_params %}&{{ query_params }}{% endif %}">آخرین</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% else %}
+                <div class="col-12 mt-2">
+                    <p class="text">مجصولی وجود ندارد !!!.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

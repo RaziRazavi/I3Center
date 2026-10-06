@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    ارتباط با ما
+{% endblock %}
+
+
+{% block Content %}
+    <div class="col-3">
+        <div class="text-bg-light rounded-4">
+            <p class="text-center text-danger"><i class="bi bi-house"></i></p>
+            <p class="text-center text-warning">آدرس:</p>
+            <p class="text-center mb-5">لورم ایپسوم متن ساختگی با تولید سادگی</p>
+
+            <p class="text-center text-danger"><i class="bi bi-telephone"></i></p>
+            <p class="text-center text-warning">شماره تماس:</p>
+            <p class="text-center mb-5">0912345678</p>
+
+            <p class="text-center text-danger"><i class="bi bi-envelope"></i></p>
+            <p class="text-center text-warning">ایمیل:</p>
+            <p class="text-center">a@example.com</p>
+        </div>
+    </div>
+    <div class="col-9">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="ارسال" class="btn btn-outline-primary">
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+	مشاهده دسته بندی
+{% endblock %}
+
+
+{% block Content %}
+    {% for category in categories %}
+        <div class="card" style="width: 18rem;">
+          <img src="{{ category.get_image_src }}" class="card-img-top" alt="...">
+          <div class="card-body">
+              <h5 class="card-title">{{ category.name }}</h5>
+{#              <p class="card-text">{{ product.description | truncatechars:50 }}</p>#}
+              {% if category.is_parent %}
+                <a href="{{ category.get_absolute_url }}" class="btn btn-primary">
+                    {% if category.has_child %}دیدن جزییات {% else %}دیدن محصول ها{% endif %}</a>
+              {% else %}
+                  <a href="{% url 'products:view_from_category' category.pk category.slug %}" class="btn btn-primary">
+                      دیدن محصول ها</a>
+              {% endif %}
+
+          </div>
+        </div>
+    {% endfor %}
+{% endblock %}

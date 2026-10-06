@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    صفحه اصلی
+{% endblock %}
+
+
+{% block Content %}
+    <div class="row mt-2">
+        {#    all Products#}
+        <div class="col-6">
+            <h2 class="text-center"><a href="{% url 'products:view' %}" class="text-decoration-none">همه محصول ها</a>
+            </h2>
+            <div id="carouselExampleAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for product in products %}
+                        <button type="button" data-bs-target="#carouselExampleAutoplaying"
+                                data-bs-slide-to="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"
+                                {% if forloop.first %} class="active" aria-current="true"{% endif %}>
+                        </button>
+                    {% endfor %}
+                    {#                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"#}
+                    {#                        aria-label="Slide 2"></button>#}
+                </div>
+                <div class="carousel-inner">
+                    {% for product in products %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ product.get_image_src }}" class="d-block w-100 rounded" height="350px"
+                                     alt="">
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        {#    Discounted Products#}
+        <div class="col-6">
+            <h2 class="text-center">
+                <a href="{% url 'products:view' %}?discount=True" class="text-decoration-none">محصول های تخفیف دار</a>
+            </h2>
+            <div id="carouselExampleAutoplaying2" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for product in discounts %}
+                        <button type="button" data-bs-target="#carouselExampleAutoplaying2"
+                                data-bs-slide-to="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"
+                                {% if forloop.first %} class="active" aria-current="true"{% endif %}>
+                        </button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for product in discounts %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ product.get_image_src }}" class="d-block w-100 rounded" height="350px"
+                                     alt="">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h4 class="text-danger">تخفیف: {{ product.discount }}%</h4>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying2"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying2"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        {#    Most sold Products  #}
+        <div class="col-6">
+            <h2 class="text-center">
+                <a href="{% url 'products:view' %}?sort_sale=2" class="text-decoration-none">پرفروش ترین محصول ها</a>
+            </h2>
+            <div id="carouselExampleAutoplaying3" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for product in sales %}
+                        <button type="button" data-bs-target="#carouselExampleAutoplaying3"
+                                data-bs-slide-to="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"
+                                {% if forloop.first %} class="active" aria-current="true"{% endif %}>
+                        </button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for product in sales %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ product.get_image_src }}" class="d-block w-100 rounded" height="350px"
+                                     alt="">
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying3"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying3"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        {#    Most Visited Products  #}
+        <div class="col-6">
+            <h2 class="text-center">
+                <a href="{% url 'products:view' %}?sort_view=2" class="text-decoration-none">پربازدید ترین محصول ها</a>
+            </h2>
+            <div id="carouselExampleAutoplaying4" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for product in visits %}
+                        <button type="button" data-bs-target="#carouselExampleAutoplaying4"
+                                data-bs-slide-to="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"
+                                {% if forloop.first %} class="active" aria-current="true"{% endif %}>
+                        </button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for product in visits %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ product.get_image_src }}" class="d-block w-100 rounded" height="350px"
+                                     alt="">
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying4"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying4"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        {#    Most Favorite Products  #}
+        <div class="col-6">
+            <h2 class="text-center">
+                <a href="{% url 'products:view' %}?sort_like=2" class="text-decoration-none">محبوب ترین محصول ها</a>
+            </h2>
+            <div id="carouselExampleAutoplaying5" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for product in favorites %}
+                        <button type="button" data-bs-target="#carouselExampleAutoplaying5"
+                                data-bs-slide-to="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"
+                                {% if forloop.first %} class="active" aria-current="true"{% endif %}>
+                        </button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for product in favorites %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ product.get_image_src }}" class="d-block w-100 rounded" height="350px"
+                                     alt="">
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying5"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying5"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        {#    Newest Products  #}
+        <div class="col-6">
+            <h2 class="text-center">
+                <a href="{% url 'products:view' %}?sort_date=2" class="text-decoration-none">جدیدترین محصول ها</a>
+            </h2>
+            <div id="carouselExampleAutoplaying6" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for product in news %}
+                        <button type="button" data-bs-target="#carouselExampleAutoplaying6"
+                                data-bs-slide-to="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"
+                                {% if forloop.first %} class="active" aria-current="true"{% endif %}>
+                        </button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for product in news %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ product.get_image_src }}" class="d-block w-100 rounded" height="350px"
+                                     alt="">
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying6"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying6"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 mx-auto">
+            <h2 class="text-center">
+                <a href="{% url 'posts:view' %}" class="text-decoration-none">مقاله ها</a>
+            </h2>
+            <div id="carouselExampleAutoplaying7" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for product in articles %}
+                        <button type="button" data-bs-target="#carouselExampleAutoplaying7"
+                                data-bs-slide-to="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"
+                                {% if forloop.first %} class="active" aria-current="true"{% endif %}>
+                        </button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for product in articles %}
+                        <a href="{{ product.get_absolute_url }}">
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ product.get_image_src }}" class="d-block w-100 rounded" height="400px"
+                                     alt="">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h4 class="text-danger">اسم مقاله: {{ product.name }}</h4>
+                                    <p class="text-danger">تاریخ ایجاد: {{ product.created_at_jalali }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying7"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying7"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    {#    <div class="col mt-2">#}
+    {#        <a href="{% url 'products:category_view' %}" class="btn btn-outline-success">Category View</a>#}
+    {#        <a href="{% url 'products:view' %}" class="btn btn-outline-success">All Products</a>#}
+    {#    </div>#}
+{% endblock %}

@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load my_custom_tags %}
+{% load humanize %}
+{% load static %}
+{% load jformat %}
+
+{% block title %}
+    {{ product.name }} - جزییات محصول
+{% endblock %}
+
+
+{% block Content %}
+    <div class="col-4 mb-3 mt-3">
+        <div class="card" style="width: 18rem;">
+            {#            <img src="{{ product.get_image_src }}" class="card-img-top" alt="...">#}
+            <div id="carouselExampleAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in images %}
+                        <div class="carousel-item {% if not image.title %}active{% endif %}">
+                            <img src="{{ image.get_image_src }}" class="d-block w-100 rounded" title="{{ image.title }}"
+                                 alt="{{ image.alt }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description | safe }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">برند : {{ product.brand }}</li>
+                <li class="list-group-item">جنس : {{ product.material }}</li>
+                <li class="list-group-item">دسته بندی : {{ product.category }}</li>
+                <li class="list-group-item">قیمت پایه : {{ product.start_price | intcomma }}</li>
+                <li class="list-group-item">تخفیف : {{ product.discount }}%</li>
+                <li class="list-group-item">قیمت : {{ product.base_price | intcomma }}</li>
+                <li class="list-group-item">موجودی : {{ product.total_stocks }}</li>
+                <li class="list-group-item">تعداد بازدید : {{ product.views_count }}</li>
+                <li class="list-group-item">پسندیدن:
+                    <form action="{{ product.get_like_url }}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-suit-heart{{ product | product_like_checker:request.user.id }}"></i>
+                        </button>
+                    </form>
+                </li>
+                <li class="list-group-item">تعداد لایک ها : {{ product.favorites_count }}</li>
+            </ul>
+            <div class="card-body">
+                <a class="btn btn-outline-success" href="{% url 'orders:cart_view' %}" role="button">مشاهده سبد خرید</a>
+            </div>
+        </div>
+    </div>
+
+
+    {% for variant in variants %}
+        <div class="col-4 mt-3 mb-3">
+            <div>
+                <canvas id="myChart{{ variant.id }}"></canvas>
+            </div>
+        </div>
+    {% endfor %}
+
+    {#    Variant Section            #}
+    <div class="row">
+        {% if variants %}
+            <div class="col">
+                <p class="">متغیر های موجود : </p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>شماره</th>
+                        <th>آیدی</th>
+                        <th>اسم</th>
+                        <th>رنگ</th>
+                        <th>سایز</th>
+                        <th>موجودی</th>
+                        <th>قیمت متغیر</th>
+                        <th>قیمت نهایی</th>
+                        {% if product.available %}
+                            <th>سفارش</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for variant in variants %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ variant.id }}</td>
+                            <td>{{ variant.name }}</td>
+                            <td>{{ variant.color.name }}</td>
+                            <td>{{ variant.size.name }}</td>
+                            <td>{{ variant.stock }}</td>
+                            <td>{{ variant.variant_price | intcomma }}</td>
+                            <td>{{ variant.final_price | intcomma }}</td>
+                            {% if  variant.product.available and variant.is_available %}
+                                <td>
+                                    <form action="{% url 'orders:cart_add' variant.id %}" method="post">
+                                        {% csrf_token %}
+                                        {{ cart_form.as_p }}
+                                        <input type="submit" value="سفارش" class="btn btn-success">
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>متغیری موجود نیست !!!.</p>
+        {% endif %}
+    </div>
+
+    {#    comment & reply  section                       #}
+    <div class="row">
+        {% for comment in comments %}
+            <div class="col-4">
+                <div class="card" style="">
+                    <div class="card-header">{{ comment.created_at | timesince }} پیش </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            لایک کامنت
+                            <form action="{{ comment.get_like_url }}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-hand-thumbs-up{{ comment | comment_like_checker:request.user.id }}"></i>
+                                </button>
+                            </form>
+                            تعداد لایک ها : {{ comment.like_count }}
+                        </li>
+                        <li class="list-group-item">
+                            هیت کامنت
+                            <form action="{{ comment.get_dislike_url }}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-hand-thumbs-down{{ comment | comment_dislike_checker:request.user.id }}"></i>
+                                </button>
+                            </form>
+                            تعداد هیت ها : {{ comment.dislike_count }}
+                        </li>
+                        <li class="list-group-item">
+                            کاربر : {{ comment.user.get_full_name }}
+                        </li>
+                        <li class="list-group-item">
+                            کامنت کرده : {{ comment.body }}
+                        </li>
+                        <li class="list-group-item">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                <div class="mb-3">
+                                    {{ form.as_p }}
+                                </div>
+                                <button type="submit" class="btn btn-primary">ارسال جواب</button>
+                            </form>
+                        </li>
+                        <li class="list-group-item">
+                            {% for reply in replies %}
+                                {% if reply.parent.id == comment.id %}
+                                    <p class="card-body">کاربر {{ reply.user.get_full_name }}
+                                        جواب داده : {{ reply.body }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-4 mb-3">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary">ارسال کامنت</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extra_JS %}
+    <script src="{% static 'JS/chart.js' %}"></script>
+
+    {% for variant in variants %}
+        <script>
+            const ctx{{ variant.id }} = document.getElementById('myChart{{ variant.id }}');
+
+            new Chart(ctx{{ variant.id }}, {
+                type: 'line',
+                data: {
+                    labels: [
+                        {% for item in variant.price_changes.all %}
+                            "{{ item.created_at | jformat:'%Y-%m-%d'  }}",
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'تغییر قیمت برای {{ variant.name }}',
+                        data: [
+                            {% for item in variant.price_changes.all %}
+                                '{{ item.price }}',
+                            {% endfor %}
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#{{ variant.color.hex_code }}',
+                        tension: 0.1,
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    {% endfor %}
+
+{% endblock %}
