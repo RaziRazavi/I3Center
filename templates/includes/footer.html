@@ -1,0 +1,69 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-2">
+            <h5>دسترسی سریع</h5>
+            <p><a href="{% url 'posts:view' %}" class="text-decoration-none text-reset">مقاله</a></p>
+            <p><a href="{% url 'products:faq' %}" class="text-decoration-none text-reset">سوالات متداول</a>
+            </p>
+            <p><a href="{% url 'products:about_us' %}" class="text-decoration-none text-reset">درباره ما</a></p>
+            <p><a href="{% url 'products:contact_us' %}" class="text-decoration-none text-reset">ارتباط با ما</a></p>
+        </div>
+        <div class="col-2">
+            <h5>دسته بندی محصول</h5>
+            {% for item in departments %}
+                <p><a href="{{ item.get_absolute_url }}" class="text-decoration-none text-reset">{{ item.name }}</a></p>
+            {% endfor %}
+        </div>
+        <div class="col-2">
+            <h5>ناحیه کاربری</h5>
+            <p><a href="{% url 'orders:cart_view' %}" class="text-decoration-none text-reset">مشاهده سبد خرید</a></p>
+            {% if not request.user.is_authenticated %}
+                <p><a class="text-decoration-none text-reset" href="{% url 'accounts:user_login' %}">ورود</a></p>
+                <p><a class="text-decoration-none text-reset" href="{% url 'accounts:user_register' %}">ثبت نام</a></p>
+                <p><a class="text-decoration-none text-reset" href="{% url 'accounts:user_password_reset' %}">رست رمز
+                    عبور</a>
+                </p>
+            {% else %}
+                <p><a class="text-decoration-none text-reset" href="{% url 'accounts:user_password_change' %}">تغییر رمز
+                    عبور</a>
+                <p><a class="text-decoration-none text-reset" href="{% url 'orders:order_view' %}">نمایش سفارش</a>
+                </p>
+            {% endif %}
+        </div>
+        <div class="col-6">
+            <h5 class="">
+                <a href="{% url 'products:home' %}" class="text-decoration-none text-reset">
+                    <img src="https://i3center.s3.ir-thr-at1.arvanstorage.ir/others%2Fi3center-logo.png?versionId="
+                         alt="" width="100px">
+                </a>
+            </h5>
+            <p class="text">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان
+                گرافیک
+                است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد
+                نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
+            </p>
+            <div class="row">
+                <div class="col-4">
+                    <a href="">
+                        <img src="https://i3center.s3.ir-thr-at1.arvanstorage.ir/others%2Fenamad.png?versionId=" alt=""></a>
+                </div>
+                <div class="col-4">
+                    <a href="">
+                        <img src="https://i3center.s3.ir-thr-at1.arvanstorage.ir/others%2Fetehadiye.png?versionId="
+                             alt=""></a>
+                </div>
+                <div class="col-4">
+                    <a href="">
+                        <img src="https://i3center.s3.ir-thr-at1.arvanstorage.ir/others%2Fsamandehi.png?versionId="
+                             alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 mx-auto">
+            <p>Website was made by <a href="https://github.com/RaziRazavi" class="text-decoration-none"
+                                      target="_blank">Razi</a></p>
+        </div>
+    </div>
+</div>

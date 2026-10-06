@@ -1,0 +1,15 @@
+{% if messages %} {# shows following messages if they are called  #}
+
+    {% for message in messages %}
+    	<div
+            {% if message.tags %}
+                class="col-12 alert alert-{{ message.tags }}"
+            {% else %}
+            	class="col-12 alert alert-primary"
+            {% endif %}
+            role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+{% endif %}

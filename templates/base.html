@@ -1,0 +1,38 @@
+{% load static %} {# enabling static urls and files #}
+
+
+<!DOCTYPE html>
+<html lang="fa-ir" dir="rtl"> {# setups persian language and right to left direction #}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{% block title %} {% endblock %}</title> {# setups title block #}
+
+        <link rel="stylesheet" href="{% static 'CSS/bootstrap.rtl.min.css' %}"> {# setups main CSS file #}
+        <link rel="stylesheet" href="{% static 'CSS/bootstrap-icons/bootstrap-icons.min.css' %}">  {# setups icon CSS file #}
+
+        {% block extra_CSS %} {% endblock %} {# setups extra css file whether it is needed #}
+    </head>
+    <body>
+        <header>
+            {% include 'includes/header.html' %}
+        </header>
+        <main style="min-height:400px">
+            <div class="container mb-2 mt-2">
+                <div class="row">
+                    {% include 'includes/messages.html' %} {# includes alert messages if it is needed  #}
+
+
+                    {% block Content %} {% endblock %}
+                </div>
+            </div>
+        </main>
+        <footer>
+            {% include 'includes/footer.html' %}
+        </footer>
+        <script src="{% static 'JS/bootstrap.bundle.min.js' %}"></script> {# setups main js file #}
+
+        {% block extra_JS %} {% endblock %} {# setups extra JS file if it is needed #}
+    </body>
+</html>

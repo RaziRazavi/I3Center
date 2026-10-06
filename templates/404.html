@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    404 پیدا نشد
+{% endblock %}
+
+
+{% block Content %}
+    <div class="col-12">
+        <p>404 صفحه موجود نیست !</p>
+        <a href="{% url 'products:home' %}" role="button" class="btn btn-outline-success">صفحه اصلی</a>
+    </div>
+{% endblock %}

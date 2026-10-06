@@ -1,0 +1,40 @@
+<div class="container mt-2">
+    <div class="row">
+        <div class="col-1">
+            <a href="{% url 'products:home' %}">
+                <img src="https://i3center.s3.ir-thr-at1.arvanstorage.ir/others%2Fi3center-logo.png?versionId="
+                     alt="" width="100rem" height="30rem">
+            </a>
+        </div>
+        <div class="col-8">
+            <form class="d-flex" method="get" action="{% url 'products:view' %}">
+                <div class="flex-grow-1">
+                    {{ search_form }}
+                </div>
+                {#                <input class="form-control me-2" type="search" placeholder="Type Here..." aria-label="Search"/>#}
+                <button class="btn btn-outline-success ms-2" type="submit">جستجو</button>
+            </form>
+        </div>
+        <div class="col-2">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'accounts:user_logout' %}" role="button" class="btn btn-outline-danger">خروج</a>
+            {% else %}
+                <a href="{% url 'accounts:user_login' %}" role="button" class="btn btn-outline-success">ورود</a>
+                <span>/</span>
+                <a href="{% url 'accounts:user_register' %}" role="button" class="btn btn-outline-success">ثبت نام</a>
+            {% endif %}
+        </div>
+        <div class="col-1">
+            <a href="{% url 'orders:cart_view' %}" role="button" class="btn btn-outline-success">
+                {% if cart %}
+                    <i class="bi bi-cart-fill"></i>{{ cart.get_total_quantity }}
+                {% else %}
+                    <i class="bi bi-cart"></i>
+                {% endif %}
+            </a>
+        </div>
+
+
+        {% include 'includes/navbar.html' %}
+    </div>
+</div>
