@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    مشاهده سفارش
+{% endblock %}
+
+
+{% block Content %}
+    {% if orders %}
+        <p class="text">سفارش های شما :</p>
+        {% for order in orders %}
+            <div class="col-4 mb-1 mt-1">
+                <div class="card text-center">
+                    <div class="card-header">
+                        شماره سفارش : {{ forloop.counter }} - آیدی سفارش : {{ order.id }}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">اسم: {{ order.first_name }} {{ order.last_name }} </h5>
+                        <p class="card-text">شماره تماس : {{ order.phone_number }}</p>
+                        <p class="card-text">وضعیت پرداخت : {{ order.is_paid }}</p>
+                        {% for item in order.order_items.all %}
+                            <p class="card-text">محصول {{ forloop.counter }} : {{ item.product.name }}</p>
+                        {% endfor %}
+                        <a href="{{ order.get_absolute_url }}" class="btn btn-success">
+                            {% if not order.paid %}بعدی{% else %}مشاهده جزییات{% endif %}</a>
+                        {% if not order.paid %}
+                            <a href="{% url 'orders:order_modify' order.id %}" class="btn btn-primary">اصلاح سفارش</a>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="order" value="{{ order.id }}">
+                                <input type="submit" value="حذف سفارش" class="btn btn-danger">
+                            </form>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer text-body-secondary">
+                        {{ order.created_at|timesince }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>سفارشی وجود ندارد</p>
+    {% endif %}
+{% endblock %}

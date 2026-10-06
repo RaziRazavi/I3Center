@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block title %}
+	مشاهده سبد خرید
+{% endblock %}
+
+
+{% block Content %}
+    {% if cart %}
+        <table class="table mt-1 table-striped">
+            <thead>
+                <tr>
+                    <th>شماره</th>
+                    <th>تصویر محصول</th>
+                    <th>اسم محصول</th>
+                    <th>اسم متغیر</th>
+                    <th>رنگ</th>
+                    <th>سایز</th>
+                    <th>قیمت</th>
+                    <th>تعداد</th>
+                    <th>مجموع قیمت</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in cart %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><img src="{{ c.product_picture }}" alt="" width="60rem" height="60rem"></td>
+                        <td><a href="{{ c.product_url }}">{{ c.product_name }}</a></td>
+                        <td>{{ c.variant }}</td>
+                        <td>{{ c.color }}</td>
+                        <td>{{ c.size }}</td>
+                        <td>{{ c.price | intcomma}}</td>
+                        <td>
+                            <form action="{% url 'orders:cart_update' c.variant_id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="add">
+                                <button type="submit" class="btn btn-outline-success">
+                                    <i class="bi bi-cart-plus fs-5"></i>
+                                </button>
+                            </form>
+                            {{ c.quantity }}
+                            <form action="{% url 'orders:cart_update' c.variant_id %}" method="post" class="d-inline">
+                                <input type="hidden" name="action" value="remove">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="bi bi-cart-dash fs-5"></i>
+                                </button>
+                            </form>
+                            <form action="{% url 'orders:cart_update' c.variant_id %}" method="post" class="d-inline">
+                                <input type="hidden" name="action" value="delete">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-cart-x fs-5"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <td>{{ c.total_price | intcomma }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        <caption><p>صورت حساب شما : {{ cart.get_total_price | intcomma }}</p>
+            <a class="btn btn-outline-success" href="{% url 'orders:order_form' %}" role="button">بعدی</a>
+        </caption>
+        </table>
+
+    {% else %}
+        <p>سبد خرید خالی است.</p>
+        <a class="btn btn-outline-primary" href="{% url 'products:category_view' %}" role="button">صفحه دسته بندی محصول
+        </a>
+    {% endif %}
+{% endblock %}

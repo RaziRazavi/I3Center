@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block title %}
+    جزییات سفارش
+{% endblock %}
+
+
+{% block Content %}
+    <div class="col">
+        <table class="table caption-top table-striped">
+            <caption>اطلاعات عمومی</caption>
+            <thead>
+            <tr>
+                <th>شماره تماس</th>
+                <th>ایمیل</th>
+                <th>اسم</th>
+                <th>فامیل</th>
+                <th>استان</th>
+                <th>شهر</th>
+                <th>آدرس</th>
+                <th>کد پستی</th>
+                <th>مجموع قیمت</th>
+                <th>وضعیت پرداخت</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ order.phone_number }}</td>
+                <td>{{ order.email }}</td>
+                <td>{{ order.first_name }}</td>
+                <td>{{ order.last_name }}</td>
+                <td>{{ order.state }}</td>
+                <td>{{ order.city }}</td>
+                <td>{{ order.address|truncatechars:30 }}</td>
+                <td>{{ order.zip_code }}</td>
+                <td>{{ order.base_price |intcomma }}</td>
+                <td>{{ order.is_paid }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped caption-top">
+                <caption>جزییات سفارش</caption>
+                <thead>
+                <tr>
+                    <th>شماره</th>
+                    <th>تصویر محصول</th>
+                    <th>محصول</th>
+                    <th>متغیر</th>
+                    <th>قیمت</th>
+                    <th>تعداد</th>
+                    <th>مجموع</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in order.order_items.all %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><img src="{{ item.product.get_image_src }}" alt="" width="60rem" height="60rem"></td>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.variant.name }}</td>
+                        <td>{{ item.price|intcomma }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.order_item_total_price|intcomma }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% if not order.paid %}
+                <tfoot>
+                    <tr>
+                        <td><a href="{% url 'orders:order_modify' order.id %}" class="btn btn-outline-primary"
+                               role="button">اصلاح سفارش</a></td>
+                    </tr>
+                </tfoot>
+            {% endif %}
+            </table>
+        </div>
+    </div>
+
+    {% if order.paid == False %}
+        <div class="col">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="پرداخت" class="btn btn-outline-success">
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

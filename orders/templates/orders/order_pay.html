@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block title %}
+    پرداخت سفارش
+{% endblock %}
+
+
+{% block Content %}
+    <div class="col">
+        <p class="text">مقدار پرداخت : {{ order.paid_price | intcomma }}</p>
+        <form action="{% url 'orders:zp_request' order.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="پرداخت" class="btn btn-outline-success">
+        </form>
+    </div>
+{% endblock %}
